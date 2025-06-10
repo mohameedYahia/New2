@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة مؤشرات الأداء الاحترافية - صندوق استصلاح الأراضي</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #1a202c; /* Dark background for a modern feel */
+        }
+        
+        /* Custom scrollbar for a polished look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #2d3748;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4a5568;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #718096;
+        }
+
+        /* Active state for sidebar navigation */
+        .sidebar-link.active {
+            background-color: #285430;
+            color: #ffffff;
+            box-shadow: 0 4px 14px 0 rgba(40, 84, 48, 0.39);
+        }
+        
+        /* Entrance animation for cards */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        /* Custom chart container styles */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 350px;
+        }
+
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+
+    <div class="flex min-h-screen">
+        <!-- Sidebar Navigation -->
+        <aside class="w-64 bg-gray-800/50 backdrop-blur-sm p-6 space-y-8 border-l border-gray-700/60 hidden lg:flex flex-col fixed h-full right-0">
+            <div class="text-center">
+                <img src="https://placehold.co/150x150/285430/FFFFFF?text=شعار" alt="شعار الصندوق" class="mx-auto h-24 w-24 rounded-full object-cover shadow-lg mb-4 ring-2 ring-[#557A46]">
+                <h1 class="text-xl font-bold text-white">صندوق استصلاح الأراضي</h1>
+                <p class="text-sm text-green-300">محافظة الوادي الجديد</p>
+            </div>
+
+            <nav class="flex-grow">
+                <ul class="space-y-3">
+                    <li><a href="#financial" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-700 transition-colors duration-200">
+                        <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg>
+                        الرؤية المالية
+                    </a></li>
+                    <li><a href="#allocation" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-700 transition-colors duration-200">
+                        <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l-1.586-1.586a2 2 0 00-2.828 0L6 16m6-6l.01.01"></path></svg>
+                        رؤية التخصيص
+                    </a></li>
+                    <li><a href="#execution" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-700 transition-colors duration-200">
+                        <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                        التنفيذ والمتابعة
+                    </a></li>
+                     <li><a href="#investors" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-700 transition-colors duration-200">
+                        <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                        فاعلية المستثمرين
+                    </a></li>
+                    <li><a href="#admin" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-700 transition-colors duration-200">
+                        <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        المؤشرات الإدارية
+                    </a></li>
+                </ul>
+            </nav>
+            <div class="text-center text-xs text-gray-500">
+                &copy; 2024. جميع الحقوق محفوظة.
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 lg:mr-64">
+            <header class="bg-gray-800/50 backdrop-blur-sm p-4 sticky top-0 z-20 shadow-lg lg:hidden flex justify-between items-center">
+                 <h1 class="text-lg font-bold text-white">لوحة المؤشرات</h1>
+                 <button id="menu-btn" class="text-white">
+                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                 </button>
+            </header>
+
+            <main class="p-4 sm:p-6 lg:p-8 space-y-12">
+                <!-- Financial Section -->
+                <section id="financial" class="fade-in">
+                    <h2 class="text-3xl font-extrabold text-white mb-6 border-r-4 border-green-400 pr-4">💰 الرؤية المالية</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+                        <div class="bg-gray-800/70 p-6 rounded-xl border border-gray-700 hover:border-green-400 transition-all duration-300 transform hover:-translate-y-1">
+                            <h3 class="text-lg font-semibold text-gray-300">إجمالي الإيرادات المحصلة</h3>
+                            <p class="text-4xl font-black text-green-300 mt-2">75.4 <span class="text-xl font-bold text-gray-400">مليون جنيه</span></p>
+                        </div>
+                        <div class="bg-gray-800/70 p-6 rounded-xl border border-gray-700 hover:border-green-400 transition-all duration-300 transform hover:-translate-y-1">
+                            <h3 class="text-lg font-semibold text-gray-300">إجمالي المستحقات المتأخرة</h3>
+                            <p class="text-4xl font-black text-amber-300 mt-2">12.1 <span class="text-xl font-bold text-gray-400">مليون جنيه</span></p>
+                        </div>
+                        <div class="bg-gray-800/70 p-6 rounded-xl border border-gray-700 hover:border-green-400 transition-all duration-300 transform hover:-translate-y-1">
+                            <h3 class="text-lg font-semibold text-gray-300">نسبة التحصيل</h3>
+                            <p class="text-4xl font-black text-green-300 mt-2">86.2<span class="text-2xl font-bold text-gray-400">%</span></p>
+                        </div>
+                        <div class="bg-amber-900/40 p-6 rounded-xl border border-amber-600 hover:border-amber-400 transition-all duration-300 transform hover:-translate-y-1">
+                            <h3 class="text-lg font-semibold text-amber-200">عدد الأقساط المتأخرة</h3>
+                            <p class="text-4xl font-black text-amber-200 mt-2">245 <span class="text-xl font-bold text-amber-300/80">قسط</span></p>
+                        </div>
+                    </div>
+                    <div class="bg-gray-800/70 p-6 rounded-xl border border-gray-700">
+                        <h3 class="text-xl font-bold text-white mb-4 text-center">توزيع الأقساط المتأخرة (آخر 6 شهور)</h3>
+                        <div class="chart-container"><canvas id="overdueInstallmentsChart"></canvas></div>
+                    </div>
+                </section>
+                
+                <!-- Allocation Section -->
+                <section id="allocation" class="fade-in">
+                    <h2 class="text-3xl font-extrabold text-white mb-6 border-r-4 border-blue-400 pr-4">🏞️ رؤية التخصيص</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 gap-6">
+                        <div class="sm:col-span-1 xl:col-span-1 space-y-6">
+                            <div class="bg-gray-800/70 p-6 rounded-xl border border-gray-700 hover:border-blue-400 transition-all duration-300 transform hover:-translate-y-1">
+                                <h3 class="text-lg font-semibold text-gray-300">إجمالي الطلبات المقدمة</h3>
+                                <p class="text-4xl font-black text-blue-300 mt-2">1,520 <span class="text-xl font-bold text-gray-400">طلب</span></p>
+                            </div>
+                            <div class="bg-gray-800/70 p-6 rounded-xl border border-gray-700 hover:border-blue-400 transition-all duration-300 transform hover:-translate-y-1">
+                                <h3 class="text-lg font-semibold text-gray-300">الطلبات الموافق عليها</h3>
+                                <p class="text-4xl font-black text-blue-300 mt-2">980 <span class="text-xl font-bold text-gray-400">طلب</span></p>
+                            </div>
+                              <div class="bg-gray-800/70 p-6 rounded-xl border border-gray-700 hover:border-blue-400 transition-all duration-300 transform hover:-translate-y-1">
+                                <h3 class="text-lg font-semibold text-gray-300">متوسط مدة التخصيص</h3>
+                                <p class="text-4xl font-black text-blue-300 mt-2">45 <span class="text-xl font-bold text-gray-400">يوم</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-gray-800/70 p-6 rounded-xl border border-gray-700">
+                            <h3 class="text-xl font-bold text-white mb-4 text-center">توزيع الأراضي حسب النوع</h3>
+                            <div class="chart-container mx-auto" style="max-width: 320px;"><canvas id="landTypeChart"></canvas></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Other sections would follow the same improved structure -->
+                 <section id="execution" class="fade-in">
+                    <h2 class="text-3xl font-extrabold text-white mb-6 border-r-4 border-purple-400 pr-4">🚧 رؤية التنفيذ والمتابعة</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                         <div class="bg-gray-800/70 p-6 rounded-xl border border-gray-700 hover:border-purple-400 transition-all duration-300 transform hover:-translate-y-1">
+                            <h3 class="text-lg font-semibold text-gray-300">مشاريع تم تنفيذها</h3>
+                            <p class="text-4xl font-black text-purple-300 mt-2">412 <span class="text-xl font-bold text-gray-400">مشروع</span></p>
+                        </div>
+                        <div class="bg-gray-800/70 p-6 rounded-xl border border-gray-700 hover:border-purple-400 transition-all duration-300 transform hover:-translate-y-1">
+                            <h3 class="text-lg font-semibold text-gray-300">أراضٍ تم سحبها</h3>
+                            <p class="text-4xl font-black text-purple-300 mt-2">58 <span class="text-xl font-bold text-gray-400">قطعة</span></p>
+                        </div>
+                        <div class="bg-amber-900/40 p-6 rounded-xl border border-amber-600 hover:border-amber-400 transition-all duration-300 transform hover:-translate-y-1">
+                            <h3 class="text-lg font-semibold text-amber-200">مستثمرون متأخرون</h3>
+                            <p class="text-4xl font-black text-amber-200 mt-2">97 <span class="text-xl font-bold text-amber-300/80">مستثمر</span></p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="investors" class="fade-in">
+                    <h2 class="text-3xl font-extrabold text-white mb-6 border-r-4 border-teal-400 pr-4">📊 فاعلية المستثمرين</h2>
+                     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-gray-800/70 p-6 rounded-xl border border-gray-700 hover:border-teal-400 transition-all duration-300 transform hover:-translate-y-1">
+                            <h3 class="text-lg font-semibold text-gray-300">إجمالي المستثمرين</h3>
+                            <p class="text-4xl font-black text-teal-300 mt-2">550 <span class="text-xl font-bold text-gray-400">مستثمر</span></p>
+                        </div>
+                        <div class="bg-gray-800/70 p-6 rounded-xl border border-gray-700 hover:border-teal-400 transition-all duration-300 transform hover:-translate-y-1">
+                            <h3 class="text-lg font-semibold text-gray-300">المستثمرون النشطون</h3>
+                            <p class="text-4xl font-black text-teal-300 mt-2">215 <span class="text-xl font-bold text-gray-400">مستثمر</span></p>
+                        </div>
+                        <div class="bg-gray-800/70 p-6 rounded-xl border border-gray-700 hover:border-teal-400 transition-all duration-300 transform hover:-translate-y-1">
+                            <h3 class="text-lg font-semibold text-gray-300">نسبة التفاعل اليومي</h3>
+                            <p class="text-4xl font-black text-teal-300 mt-2">42<span class="text-2xl font-bold text-gray-400">%</span></p>
+                        </div>
+                    </div>
+                    <div class="bg-gray-800/70 p-6 rounded-xl border border-gray-700">
+                        <h3 class="text-xl font-bold text-white mb-4 text-center">توزيع المستثمرين حسب حجم الاستثمار</h3>
+                        <div class="chart-container"><canvas id="investorDistributionChart"></canvas></div>
+                    </div>
+                </section>
+
+                <section id="admin" class="fade-in">
+                    <h2 class="text-3xl font-extrabold text-white mb-6 border-r-4 border-red-400 pr-4">⏳ المؤشرات الإدارية والزمنية</h2>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                         <div class="bg-gray-800/70 p-6 rounded-xl border border-gray-700 hover:border-red-400 transition-all duration-300 transform hover:-translate-y-1">
+                            <h3 class="text-lg font-semibold text-gray-300">متوسط الزمن من التقديم للقرار</h3>
+                            <p class="text-4xl font-black text-red-300 mt-2">21 <span class="text-xl font-bold text-gray-400">يوم</span></p>
+                        </div>
+                        <div class="bg-amber-900/40 p-6 rounded-xl border border-amber-600 hover:border-amber-400 transition-all duration-300 transform hover:-translate-y-1">
+                            <h3 class="text-lg font-semibold text-amber-200">طلبات متأخرة عن الجدول</h3>
+                            <p class="text-4xl font-black text-amber-200 mt-2">35 <span class="text-xl font-bold text-amber-300/80">طلب</span></p>
+                        </div>
+                    </div>
+                    <div class="bg-gray-800/70 p-6 rounded-xl border border-gray-700">
+                        <h3 class="text-xl font-bold text-white mb-4 text-center">حالة الشكاوى والتظلمات</h3>
+                        <div class="chart-container" style="height: 200px;"><canvas id="complaintsChart"></canvas></div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Configuration for Charts ---
+            const chartFont = {
+                family: 'Tajawal',
+                size: 13,
+            };
+            
+            const tooltipConfig = {
+                rtl: true,
+                textDirection: 'rtl',
+                bodyFont: chartFont,
+                titleFont: { ...chartFont, weight: 'bold', size: 15 },
+                backgroundColor: 'rgba(23, 30, 42, 0.9)',
+                titleColor: '#E5E7EB',
+                bodyColor: '#D1D5DB',
+                borderColor: '#4B5563',
+                borderWidth: 1,
+                padding: 10,
+                cornerRadius: 8,
+            };
+
+            const legendConfig = {
+                labels: {
+                    font: chartFont,
+                    color: '#9CA3AF',
+                },
+            };
+
+            const gridConfig = {
+                color: 'rgba(75, 85, 99, 0.4)',
+                borderColor: 'rgba(75, 85, 99, 0.4)',
+                drawBorder: false,
+            };
+
+            const ticksConfig = {
+                color: '#9CA3AF',
+                font: chartFont,
+            };
+
+            // --- Chart 1: Overdue Installments ---
+            const overdueCtx = document.getElementById('overdueInstallmentsChart').getContext('2d');
+            new Chart(overdueCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو'],
+                    datasets: [{
+                        label: 'عدد الأقساط المتأخرة',
+                        data: [45, 60, 55, 75, 65, 85],
+                        backgroundColor: 'rgba(251, 191, 36, 0.6)',
+                        borderColor: 'rgba(251, 191, 36, 1)',
+                        borderWidth: 2,
+                        borderRadius: 8,
+                        hoverBackgroundColor: 'rgba(251, 191, 36, 0.8)',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { tooltip: tooltipConfig, legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: gridConfig, ticks: ticksConfig },
+                        x: { grid: { display: false }, ticks: ticksConfig }
+                    }
+                }
+            });
+
+            // --- Chart 2: Land Type Distribution ---
+            const landTypeCtx = document.getElementById('landTypeChart').getContext('2d');
+            new Chart(landTypeCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['أراضٍ مطروحة', 'أراضٍ مقترحة'],
+                    datasets: [{
+                        data: [68, 32],
+                        backgroundColor: ['#3B82F6', '#14B8A6'],
+                        borderColor: '#1f2937',
+                        borderWidth: 4,
+                        hoverOffset: 8,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { tooltip: tooltipConfig, legend: legendConfig },
+                }
+            });
+
+            // --- Chart 3: Complaints Status ---
+            const complaintsCtx = document.getElementById('complaintsChart').getContext('2d');
+            new Chart(complaintsCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['حالة الشكاوى'],
+                    datasets: [
+                        { label: 'شكاوى مغلقة', data: [78], backgroundColor: 'rgba(52, 211, 153, 0.7)', borderRadius: 5 },
+                        { label: 'شكاوى مفتوحة', data: [22], backgroundColor: 'rgba(239, 68, 68, 0.7)', borderRadius: 5 }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { tooltip: tooltipConfig, legend: legendConfig },
+                    scales: {
+                        x: {
+                            stacked: true,
+                            grid: { display: false },
+                            ticks: { ...ticksConfig, callback: value => value + '%' }
+                        },
+                        y: { stacked: true, grid: gridConfig, ticks: { display: false } }
+                    }
+                }
+            });
+
+            // --- Chart 4: Investor Distribution ---
+            const investorDistCtx = document.getElementById('investorDistributionChart').getContext('2d');
+            new Chart(investorDistCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['أقل من 1 مليون', '1-5 مليون', '5-10 مليون', 'أكثر من 10 مليون'],
+                    datasets: [{
+                        label: 'عدد المستثمرين',
+                        data: [110, 65, 32, 8],
+                        backgroundColor: ['#14B8A6', '#3B82F6', '#8B5CF6', '#EC4899'],
+                        borderRadius: 8,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { tooltip: tooltipConfig, legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: gridConfig, ticks: ticksConfig },
+                        x: { grid: { display: false }, ticks: ticksConfig }
+                    }
+                }
+            });
+            
+            // --- Intersection Observer for sidebar active state ---
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.sidebar-link');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href').substring(1) === entry.target.id) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, { rootMargin: "-50% 0px -50% 0px" });
+
+            sections.forEach(section => observer.observe(section));
+
+            // --- Mobile menu toggle ---
+            const menuBtn = document.getElementById('menu-btn');
+            const sidebar = document.querySelector('aside');
+            menuBtn.addEventListener('click', () => {
+                sidebar.classList.toggle('hidden');
+            });
+        });
+    </script>
+</body>
+</html>
